@@ -4,6 +4,8 @@ import java.util.Observable;
 import java.util.Observer;
 import com.gtranslate.*;
 
+import db.MySQLHelper;
+
 /**
  * Concrete instance of an English to Croatian translator
  * @author joe
@@ -11,6 +13,7 @@ import com.gtranslate.*;
  */
 public class Translation implements Observer {
 	
+	private MySQLHelper dao;
 	private static Translator translator;
 	private String targetString;
 	private String finalString; //translated string
@@ -22,6 +25,7 @@ public class Translation implements Observer {
 	 * Constructor 
 	 */
 	public Translation(TranslateGUI g) { 
+		dao = new MySQLHelper("translations", "croeng");
 		gui = g;
 		gui.addObserver(this);
 		targetString = gui.getTarget();
@@ -32,7 +36,18 @@ public class Translation implements Observer {
 	 * Translate input into target language
 	 */
 	private void translateToTarget(String l1, String l2) {
-		finalString = translator.translate(targetString, Language.ENGLISH, Language.CROATIAN);
+		boolean inDB = false;
+		try {
+			String temp = dao.queryDB("cro", "eng", targetString);
+			if(temp.equals("")) { 
+				finalString = translator.translate(targetString, Language.ENGLISH, Language.CROATIAN);
+				dao.addEntry(targetString, finalString);
+			} else { 
+				finalString = temp;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 

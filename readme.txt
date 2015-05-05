@@ -8,3 +8,8 @@ Use a table structure to store all the translations and their english equivalent
 
 Possible issues:
 What do I do about special characters in the language? That's a big problem
+
+TODO:
+Seed it with basic translations
+Validate user input vs translation in the DB
+e.g. ask what pivo means, see if user input is beer
