@@ -33,7 +33,6 @@ public class TestGUI {
 	 * Constructor
 	 */
 	public TestGUI(String a, String b) { 
-		label = "Translate ";
 		l1 = a;
 		l2 = b;
 		
@@ -48,7 +47,7 @@ public class TestGUI {
 		frame.add(panel);
 		panel.setLayout(new GridBagLayout());
 		
-		question = new JLabel(label + q.nextQuestion()+".");
+		question = new JLabel(q.next()+".");
 		question.setPreferredSize(new Dimension(150, 50));
 		
 		input = new JTextArea();
@@ -61,7 +60,7 @@ public class TestGUI {
 			public void actionPerformed(ActionEvent arg0) {
 				if(q.check(input.getText())) { 
 					input.setBackground(Color.WHITE);
-					question.setText(label + q.nextQuestion()+".");
+					question.setText(q.next()+".");
 				} else { 
 					input.setBackground(Color.RED);
 				}

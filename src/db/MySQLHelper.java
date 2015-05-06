@@ -42,7 +42,7 @@ public class MySQLHelper {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection("jdbc:mysql://localhost/" + s
-					+"?user=joe&password=mystery");
+					+"?user=joe&password=mystery&characterEncoding=utf8");
 			//?'s -> lang 1, lang 2
 			preparedStatement = connect.prepareStatement("insert into " + s+"."+t+ " values" +
 					"(?, ?, ?)");
