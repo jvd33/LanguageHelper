@@ -6,10 +6,11 @@ Possible text to speech for help translating? It'll suck, but still a cool featu
 English -> Croatian AND Croatian -> English modes (easy)
 Use a table structure to store all the translations and their english equivalents
 
-Possible issues:
-What do I do about special characters in the language? That's a big problem
+Database handles croatian chars properly! 
 
 TODO:
-Seed it with basic translations
-Validate user input vs translation in the DB
-e.g. ask what pivo means, see if user input is beer
+Make the GUI less awful (better alternative to swing somewhere, there has to be...)
+Different languages, make translation an interface
+Fix bug where the language when passed as a param is some bullshit language like portuguese
+Show a side panel of the questions you have yet to complete (ex, 1. DONE 2. In progress 3. -- 4. --)
+Better scoring system maybe?
