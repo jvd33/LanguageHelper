@@ -117,24 +117,6 @@ public class MySQLHelper {
 	}
 	
 	/**
-	 * Gets size of the entire table for use in the quzzing app
-	 * @return
-	 */
-	public int getSize() { 
-		int i = 0;
-		try { 
-			PreparedStatement size = connect.prepareStatement(sizeString);
-			rs = size.executeQuery();
-			if(rs.next()) { 
-				i = rs.getInt(1);
-			}
-		} catch(SQLException e) { 
-			e.printStackTrace();
-		}
-		return i;
-	}
-	
-	/**
 	 * Gotta close, yo
 	 */
 	public void close() { 
