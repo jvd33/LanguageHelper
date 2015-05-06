@@ -1,40 +1,43 @@
 package gui;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Observable;
+
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
-import system.Translation;
 
-/**
- * GUI for the translator 
- * @author joe
- *
- */
-public class TranslateGUI {
+import system.Quizzer;
+
+public class TestGUI {
 	
 	private JFrame frame;
 	private JPanel panel;
+	private JLabel question;
 	private JTextArea input;
-	private JTextArea output;
 	private JButton translate;
+	private String label;
 	private String l1; //input language
 	private String l2; //output language
-	private Translation t;
+	private Quizzer q;
 	
 	/**
 	 * Constructor
 	 */
-	public TranslateGUI(String a, String b) { 
-		
+	public TestGUI(String a, String b) { 
+		label = "Translate ";
 		l1 = a;
 		l2 = b;
 		
-		t = new Translation(l1, l2);
+		q = new Quizzer();
 		
 		//swing components
 		GridBagConstraints c = new GridBagConstraints();
@@ -45,19 +48,23 @@ public class TranslateGUI {
 		frame.add(panel);
 		panel.setLayout(new GridBagLayout());
 		
+		question = new JLabel(label + q.nextQuestion()+".");
+		question.setPreferredSize(new Dimension(150, 50));
+		
 		input = new JTextArea();
 		input.setPreferredSize(new Dimension(150, 50));
 		
-		output = new JTextArea();
-		output.setPreferredSize(new Dimension(150, 50));
-		output.setEditable(false);
-		
-		translate = new JButton("TRANSLATE!");
+		translate = new JButton("Check");
 		translate.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				output.setText(t.translateToTarget(input.getText()));
+				if(q.check(input.getText())) { 
+					input.setBackground(Color.WHITE);
+					question.setText(label + q.nextQuestion()+".");
+				} else { 
+					input.setBackground(Color.RED);
+				}
 			} 
 			
 		});
@@ -65,10 +72,10 @@ public class TranslateGUI {
 		
 		c.gridy = 1;
 		c.gridx = 0;
-		panel.add(input, c);
+		panel.add(question, c);
 		
 		c.gridx = 1;
-		panel.add(output, c);
+		panel.add(input, c);
 		
 		c.gridx = 2;
 		c.gridy = 2;
@@ -101,8 +108,5 @@ public class TranslateGUI {
 		return r;
 	}
 	
-	public void setOutput(String arg0) { 
-		output.setText(arg0);
-	}
 
 }

@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 /**
@@ -18,9 +19,10 @@ public class MySQLHelper {
 	private Connection connect = null;
 	private PreparedStatement query = null; //query
 	private PreparedStatement preparedStatement = null; //entry
+	private String sizeString;
 	private String queryString;
+	private String randQuery;
 	private ResultSet rs = null;
-	private String remove;
 	
 	/**
 	 * Constructor
@@ -46,6 +48,8 @@ public class MySQLHelper {
 					"(?, ?, ?)");
 			//?'s -> desired column, given column, held value
 			queryString = "SELECT * FROM " + s + "." + t + " WHERE ";
+			randQuery = "SELECT cro, eng from croeng ORDER BY RAND() limit 1";
+			sizeString = "SELECT count(*) row from " + t;
 		} catch(Exception e) { 
 			e.printStackTrace();
 		} 
@@ -56,12 +60,16 @@ public class MySQLHelper {
 	 * @param i, the input string
 	 * @param t, the translated target string
 	 */
-	public void addEntry(String i, String t) throws Exception { 
-		preparedStatement.setNull(1, java.sql.Types.INTEGER);
-		preparedStatement.setString(2, i);
-		preparedStatement.setString(3, t);
-		preparedStatement.executeUpdate();
-		
+	public void addEntry(String i, String t) { 
+		try { 
+			preparedStatement.setNull(1, java.sql.Types.INTEGER);
+			preparedStatement.setString(2, i);
+			preparedStatement.setString(3, t);
+			preparedStatement.executeUpdate();
+		}
+		catch(SQLException e) { 
+			e.printStackTrace();
+		} 
 	}
 		
 	/**
@@ -72,31 +80,58 @@ public class MySQLHelper {
 	 * @return String, the translation of t
 	 * @throws Exception
 	 */
-	public String queryDB(String col, String lang, String t) throws Exception { 
-		query = connect.prepareStatement(queryString + lang + "=?");
-		query.setString(1, t);
-		rs = query.executeQuery();
-		if(rs.next()) { 
-			return rs.getString(col);
-		} else { 
+	public String queryDB(String col, String lang, String t) { 
+		try { 
+			query = connect.prepareStatement(queryString + lang + "=?");
+			query.setString(1, t);
+			rs = query.executeQuery();
+			if(rs.next()) { 
+				return rs.getString(col);
+			} else { 
+				return "";
+			}
+		} catch(SQLException e) { 
+			e.printStackTrace();
 			return "";
 		}
 	}
 	
 	/**
-	 * testing
-	 * @param args
+	 * Gets a key, val pair entry by primary key
+	 * @param id
+	 * @return
 	 */
-	public static void main(String args[]) { 
-		MySQLHelper h = new MySQLHelper("translations", "croeng");
-		try {
-			h.addEntry("zero", "nula");
-			String zero = h.queryDB("eng", "cro", "dva");
-			System.out.println(zero);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+	public ArrayList<String> getRandEntry() { 
+		ArrayList<String> keyvals = new ArrayList<String>();
+		try { 
+			PreparedStatement entryID = connect.prepareStatement(randQuery);
+			rs = entryID.executeQuery();
+			while(rs.next()) { 
+				keyvals.add(rs.getString(1));
+				keyvals.add(rs.getString(2));
+			}
+		} catch(SQLException e) { 
 			e.printStackTrace();
 		}
+		return keyvals;
+	}
+	
+	/**
+	 * Gets size of the entire table for use in the quzzing app
+	 * @return
+	 */
+	public int getSize() { 
+		int i = 0;
+		try { 
+			PreparedStatement size = connect.prepareStatement(sizeString);
+			rs = size.executeQuery();
+			if(rs.next()) { 
+				i = rs.getInt(1);
+			}
+		} catch(SQLException e) { 
+			e.printStackTrace();
+		}
+		return i;
 	}
 	
 	/**
