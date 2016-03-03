@@ -11,6 +11,6 @@ Database handles croatian chars properly!
 TODO:
 Make the GUI less awful (better alternative to swing somewhere, there has to be...)
 Different languages, make translation an interface
-Fix bug where the language when passed as a param is some bullshit language like portuguese
+Fix bug where the language when passed as a param is some undesired language like portuguese
 Show a side panel of the questions you have yet to complete (ex, 1. DONE 2. In progress 3. -- 4. --)
 Better scoring system maybe?
